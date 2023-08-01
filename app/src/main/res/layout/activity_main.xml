@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_init"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="初始化"
+        android:textAllCaps="false"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/btn_reload"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="重新加载"
+        android:textAllCaps="false"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/btn_write_cloud_config"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="写入云端配置"
+        android:textAllCaps="false"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/btn_read_cloud_config"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="读取云端配置"
+        android:textAllCaps="false"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/btn_write_local_config"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="写入本地配置"
+        android:textAllCaps="false"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/btn_read_local_config"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="读取本地配置"
+        android:textAllCaps="false"
+        android:textSize="40sp" />
+
+
+</LinearLayout>
