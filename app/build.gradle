@@ -42,5 +42,6 @@ dependencies {
 
     implementation 'com.blankj:utilcodex:1.30.6'
     implementation 'com.guolindev.permissionx:permissionx:1.6.2'
+    implementation 'com.alibaba:fastjson:1.1.73.android'
     implementation project(path: ':mf-config')
 }

@@ -24,15 +24,7 @@
         android:id="@+id/btn_write_cloud_config"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="写入云端配置"
-        android:textAllCaps="false"
-        android:textSize="40sp" />
-
-    <Button
-        android:id="@+id/btn_read_cloud_config"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="读取云端配置"
+        android:text="保存云端配置"
         android:textAllCaps="false"
         android:textSize="40sp" />
 
@@ -40,15 +32,23 @@
         android:id="@+id/btn_write_local_config"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="写入本地配置"
+        android:text="保存本地配置"
         android:textAllCaps="false"
         android:textSize="40sp" />
 
     <Button
-        android:id="@+id/btn_read_local_config"
+        android:id="@+id/btn_read_config"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="读取本地配置"
+        android:text="读取配置"
+        android:textAllCaps="false"
+        android:textSize="40sp" />
+
+    <Button
+        android:id="@+id/btn_write_map"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="保存map"
         android:textAllCaps="false"
         android:textSize="40sp" />
 

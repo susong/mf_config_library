@@ -38,6 +38,7 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
      * 参数
      */
     private List<ConfigParam> configParams;
+
     /**
      * 参数与文件名映射map
      */
@@ -155,91 +156,109 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
 
     @Override
     public GlobalConfig putString(String key, String value) {
-        putObject(CLOUD_CONFIG_FILE, key, value);
+        putObject(LOCAL_CONFIG_FILE, key, value);
         return this;
     }
 
     @Override
     public GlobalConfig putInt(String key, int value) {
-        putObject(CLOUD_CONFIG_FILE, key, value);
+        putObject(LOCAL_CONFIG_FILE, key, value);
         return this;
     }
 
     @Override
     public GlobalConfig putLong(String key, long value) {
-        putObject(CLOUD_CONFIG_FILE, key, value);
+        putObject(LOCAL_CONFIG_FILE, key, value);
         return this;
     }
 
     @Override
     public GlobalConfig putDouble(String key, double value) {
-        putObject(CLOUD_CONFIG_FILE, key, value);
+        putObject(LOCAL_CONFIG_FILE, key, value);
         return this;
     }
 
     @Override
     public GlobalConfig putBoolean(String key, boolean value) {
+        putObject(LOCAL_CONFIG_FILE, key, value);
+        return this;
+    }
+
+    @Override
+    public GlobalConfig putMap(Map<String, Object> map) {
+        putMapObject(LOCAL_CONFIG_FILE, map);
+        return this;
+    }
+
+    @Override
+    public GlobalConfig putStringCloud(String key, String value) {
         putObject(CLOUD_CONFIG_FILE, key, value);
         return this;
     }
 
     @Override
-    public GlobalConfig putStringLocal(String key, String value) {
-        putObject(LOCAL_CONFIG_FILE, key, value);
+    public GlobalConfig putIntCloud(String key, int value) {
+        putObject(CLOUD_CONFIG_FILE, key, value);
         return this;
     }
 
     @Override
-    public GlobalConfig putIntLocal(String key, int value) {
-        putObject(LOCAL_CONFIG_FILE, key, value);
+    public GlobalConfig putLongCloud(String key, long value) {
+        putObject(CLOUD_CONFIG_FILE, key, value);
         return this;
     }
 
     @Override
-    public GlobalConfig putLongLocal(String key, long value) {
-        putObject(LOCAL_CONFIG_FILE, key, value);
+    public GlobalConfig putDoubleCloud(String key, double value) {
+        putObject(CLOUD_CONFIG_FILE, key, value);
         return this;
     }
 
     @Override
-    public GlobalConfig putDoubleLocal(String key, double value) {
-        putObject(LOCAL_CONFIG_FILE, key, value);
+    public GlobalConfig putBooleanCloud(String key, boolean value) {
+        putObject(CLOUD_CONFIG_FILE, key, value);
         return this;
     }
 
     @Override
-    public GlobalConfig putBooleanLocal(String key, boolean value) {
-        putObject(LOCAL_CONFIG_FILE, key, value);
+    public GlobalConfig putMapCloud(Map<String, Object> map) {
+        putMapObject(CLOUD_CONFIG_FILE, map);
         return this;
     }
 
     @Override
-    public GlobalConfig putString(String file, String key, String value) {
-        putObject(file, key, value);
+    public GlobalConfig putString(String filename, String key, String value) {
+        putObject(filename, key, value);
         return this;
     }
 
     @Override
-    public GlobalConfig putInt(String file, String key, int value) {
-        putObject(file, key, value);
+    public GlobalConfig putInt(String filename, String key, int value) {
+        putObject(filename, key, value);
         return this;
     }
 
     @Override
-    public GlobalConfig putLong(String file, String key, long value) {
-        putObject(file, key, value);
+    public GlobalConfig putLong(String filename, String key, long value) {
+        putObject(filename, key, value);
         return this;
     }
 
     @Override
-    public GlobalConfig putDouble(String file, String key, double value) {
-        putObject(file, key, value);
+    public GlobalConfig putDouble(String filename, String key, double value) {
+        putObject(filename, key, value);
         return this;
     }
 
     @Override
-    public GlobalConfig putBoolean(String file, String key, boolean value) {
-        putObject(file, key, value);
+    public GlobalConfig putBoolean(String filename, String key, boolean value) {
+        putObject(filename, key, value);
+        return this;
+    }
+
+    @Override
+    public GlobalConfig putMap(String filename, Map<String, Object> map) {
+        putMapObject(filename, map);
         return this;
     }
 
@@ -301,6 +320,24 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
     @Override
     public Map<String, Object> getMap() {
         checkIsInit();
+        return fileConfigsMap.computeIfAbsent(LOCAL_CONFIG_FILE, s -> new HashMap<>());
+    }
+
+    @Override
+    public Map<String, Object> getMapCloud() {
+        checkIsInit();
+        return fileConfigsMap.computeIfAbsent(CLOUD_CONFIG_FILE, s -> new HashMap<>());
+    }
+
+    @Override
+    public Map<String, Object> getMap(String filename) {
+        checkIsInit();
+        return fileConfigsMap.computeIfAbsent(filename, s -> new HashMap<>());
+    }
+
+    @Override
+    public Map<String, Object> getAllMap() {
+        checkIsInit();
         return allConfigsMap;
     }
 
@@ -314,16 +351,6 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
     public void save() {
         try {
             lockWrite();
-            save(CLOUD_CONFIG_FILE, fileConfigsMap.getOrDefault(CLOUD_CONFIG_FILE, new HashMap<>()));
-        } finally {
-            unlockWrite();
-        }
-    }
-
-    @Override
-    public void saveLocal() {
-        try {
-            lockWrite();
             save(LOCAL_CONFIG_FILE, fileConfigsMap.getOrDefault(LOCAL_CONFIG_FILE, new HashMap<>()));
         } finally {
             unlockWrite();
@@ -331,18 +358,31 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
     }
 
     @Override
-    public void save(String file) {
+    public void saveCloud() {
         try {
             lockWrite();
-            save(file, fileConfigsMap.getOrDefault(file, new HashMap<>()));
+            save(CLOUD_CONFIG_FILE, fileConfigsMap.getOrDefault(CLOUD_CONFIG_FILE, new HashMap<>()));
         } finally {
             unlockWrite();
         }
     }
 
-    private void putObject(String file, String key, Object value) {
+    @Override
+    public void save(String filename) {
+        try {
+            lockWrite();
+            save(filename, fileConfigsMap.getOrDefault(filename, new HashMap<>()));
+        } finally {
+            unlockWrite();
+        }
+    }
+
+    private void putObject(String filename, String key, Object value) {
         checkIsInit();
-        Map<String, Object> map = fileConfigsMap.computeIfAbsent(file,
+        if (!configParamMap.containsKey(filename)) {
+            throw new RuntimeException(String.format("非法文件:%s，该文件不包含在初始化参数的文件名列表中", filename));
+        }
+        Map<String, Object> map = fileConfigsMap.computeIfAbsent(filename,
                 s -> new HashMap<>());
         if (value == null) {
             map.remove(key);
@@ -357,21 +397,27 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
         allConfigsMap.put(key, value);
     }
 
+    private void putMapObject(String filename, Map<String, Object> map) {
+        checkIsInit();
+        if (!configParamMap.containsKey(filename)) {
+            throw new RuntimeException(String.format("非法文件:%s，该文件不包含在初始化参数的文件名列表中", filename));
+        }
+        if (map == null || map.isEmpty()) {
+            return;
+        }
+        fileConfigsMap.computeIfAbsent(filename, s -> new HashMap<>())
+                .putAll(map);
+        allConfigsMap.putAll(map);
+    }
+
     private void save(String filename, Map<String, Object> map) {
         checkIsInit();
         if (!configParamMap.containsKey(filename)) {
             throw new RuntimeException(String.format("非法文件:%s，该文件不包含在初始化参数的文件名列表中", filename));
         }
         FileIOUtils.checkFile(filename);
-        JSONObject jsonObject = new JSONObject();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            try {
-                jsonObject.put(entry.getKey(), entry.getValue());
-            } catch (JSONException e) {
-                Log.w(TAG, String.format("put key:%s value:%s failed", entry.getKey(), entry.getValue().toString()), e);
-            }
-        }
         try {
+            JSONObject jsonObject = new JSONObject(map);
             String json = jsonObject.toString(4);
             ConfigParam configParam = configParamMap.get(filename);
             if (configParam != null && configParam.getConfigEncryptEnum() == ConfigEncryptEnum.ENCRYPT_ALL) {

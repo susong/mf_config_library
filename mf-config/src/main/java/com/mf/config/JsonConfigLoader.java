@@ -57,6 +57,18 @@ class JsonConfigLoader {
             } else if (value instanceof JSONArray) {
                 // 将 JSONArray 转换为 List<Object>
                 value = toList((JSONArray) value);
+            } else if (value instanceof String) {
+                String valueStr = (String) value;
+                // 处理可能是嵌套的 JSON 字符串
+                try {
+                    if (valueStr.startsWith("{") && valueStr.endsWith("}")) {
+                        value = toMap(new JSONObject(valueStr));
+                    } else if (valueStr.startsWith("[") && valueStr.endsWith("]")) {
+                        value = toList(new JSONArray(valueStr));
+                    }
+                } catch (Exception e) {
+                    Log.w(TAG, "解析json文件异常", e);
+                }
             }
             map.put(key, value);
         }

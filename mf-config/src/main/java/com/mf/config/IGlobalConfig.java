@@ -44,15 +44,19 @@ public interface IGlobalConfig {
 
     IGlobalConfig putBoolean(String key, boolean value);
 
-    IGlobalConfig putStringLocal(String key, String value);
+    IGlobalConfig putMap(Map<String, Object> map);
 
-    IGlobalConfig putIntLocal(String key, int value);
+    IGlobalConfig putStringCloud(String key, String value);
 
-    IGlobalConfig putLongLocal(String key, long value);
+    IGlobalConfig putIntCloud(String key, int value);
 
-    IGlobalConfig putDoubleLocal(String key, double value);
+    IGlobalConfig putLongCloud(String key, long value);
 
-    IGlobalConfig putBooleanLocal(String key, boolean value);
+    IGlobalConfig putDoubleCloud(String key, double value);
+
+    IGlobalConfig putBooleanCloud(String key, boolean value);
+
+    IGlobalConfig putMapCloud(Map<String, Object> map);
 
     IGlobalConfig putString(String file, String key, String value);
 
@@ -63,6 +67,8 @@ public interface IGlobalConfig {
     IGlobalConfig putDouble(String file, String key, double value);
 
     IGlobalConfig putBoolean(String file, String key, boolean value);
+
+    IGlobalConfig putMap(String file, Map<String, Object> map);
 
     String getString(String key, String defaultValue);
 
@@ -76,11 +82,17 @@ public interface IGlobalConfig {
 
     Map<String, Object> getMap();
 
+    Map<String, Object> getMapCloud();
+
+    Map<String, Object> getMap(String file);
+
+    Map<String, Object> getAllMap();
+
     boolean contains(String key);
 
     void save();
 
-    void saveLocal();
+    void saveCloud();
 
     void save(String file);
 }
