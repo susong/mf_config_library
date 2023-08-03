@@ -19,7 +19,7 @@ import java.util.List;
  */
 class FileIOUtils {
     public static final String SDCARD = Environment.getExternalStorageDirectory().getAbsolutePath();
-    public static final String MF_ROOT = SDCARD + "/mftest";
+    public static final String MF_ROOT = SDCARD + "/mf";
     public static final String MF_CONFIG = MF_ROOT + "/config/";
 
     /**

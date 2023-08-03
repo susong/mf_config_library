@@ -23,6 +23,23 @@ public interface IGlobalConfig {
 
     /**
      * 初始化
+     * 使用不加密的默认设置
+     *
+     * @return
+     */
+    boolean init();
+
+    /**
+     * 初始化
+     * 传入加密秘钥，其他都使用加密的默认设置
+     *
+     * @param encryptKey 加密秘钥
+     * @return
+     */
+    boolean init(String encryptKey);
+
+    /**
+     * 初始化
      *
      * @param configParams 配置参数，
      *                     现在默认分为云端配置和本地配置，

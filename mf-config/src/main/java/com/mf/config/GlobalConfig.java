@@ -74,6 +74,16 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
         return configParams;
     }
 
+    public static List<ConfigParam> getDefaultEncryptConfigParam(String encryptKey) {
+        if (encryptKey == null || encryptKey.length() == 0) {
+            encryptKey = DEFAULT_ENCRYPT_KEY;
+        }
+        List<ConfigParam> configParams = new ArrayList<>();
+        configParams.add(new ConfigParam(CLOUD_CONFIG_FILE, ConfigTypeEnum.CLOUD_CONFIG, ConfigEncryptEnum.ENCRYPT_ALL, encryptKey));
+        configParams.add(new ConfigParam(LOCAL_CONFIG_FILE, ConfigTypeEnum.LOCAL_CONFIG, ConfigEncryptEnum.ENCRYPT_ALL, encryptKey));
+        return configParams;
+    }
+
     @Override
     public String getCloudConfigFile() {
         return CLOUD_CONFIG_FILE;
@@ -82,6 +92,16 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
     @Override
     public String getLocalConfigFile() {
         return LOCAL_CONFIG_FILE;
+    }
+
+    @Override
+    public boolean init() {
+        return init(getDefaultNoEncryptConfigParam());
+    }
+
+    @Override
+    public boolean init(String encryptKey) {
+        return init(getDefaultEncryptConfigParam(encryptKey));
     }
 
     @Override
