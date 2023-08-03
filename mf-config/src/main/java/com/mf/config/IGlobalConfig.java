@@ -58,17 +58,17 @@ public interface IGlobalConfig {
 
     IGlobalConfig putMapCloud(Map<String, Object> map);
 
-    IGlobalConfig putString(String file, String key, String value);
+    IGlobalConfig putString(String filename, String key, String value);
 
-    IGlobalConfig putInt(String file, String key, int value);
+    IGlobalConfig putInt(String filename, String key, int value);
 
-    IGlobalConfig putLong(String file, String key, long value);
+    IGlobalConfig putLong(String filename, String key, long value);
 
-    IGlobalConfig putDouble(String file, String key, double value);
+    IGlobalConfig putDouble(String filename, String key, double value);
 
-    IGlobalConfig putBoolean(String file, String key, boolean value);
+    IGlobalConfig putBoolean(String filename, String key, boolean value);
 
-    IGlobalConfig putMap(String file, Map<String, Object> map);
+    IGlobalConfig putMap(String filename, Map<String, Object> map);
 
     String getString(String key, String defaultValue);
 
@@ -84,7 +84,7 @@ public interface IGlobalConfig {
 
     Map<String, Object> getMapCloud();
 
-    Map<String, Object> getMap(String file);
+    Map<String, Object> getMap(String filename);
 
     Map<String, Object> getAllMap();
 
@@ -94,5 +94,5 @@ public interface IGlobalConfig {
 
     void saveCloud();
 
-    void save(String file);
+    void save(String filename);
 }
