@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,7 +28,7 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
     /**
      * 配置文件路径，以及该文件中的配置信息
      */
-    private final Map<String, Map<String, Object>> fileConfigsMap = new HashMap<>();
+    private final Map<String, Map<String, Object>> fileConfigsMap = new LinkedHashMap<>();
 
     /**
      * 所有的配置信息
@@ -58,7 +59,7 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
 
     }
 
-    private static String DEFAULT_ENCRYPT_KEY = "bbtvx!tFfOde5nP8tSb1AfMKwE!yxx^B";
+    private static final String DEFAULT_ENCRYPT_KEY = "bbtvx!tFfOde5nP8tSb1AfMKwE!yxx^B";
 
     public static List<ConfigParam> getDefaultNoEncryptConfigParam() {
         List<ConfigParam> configParams = new ArrayList<>();
@@ -205,8 +206,8 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
     }
 
     @Override
-    public GlobalConfig putMap(Map<String, Object> map) {
-        putMapObject(LOCAL_CONFIG_FILE, map);
+    public GlobalConfig putMap(Map<String, Object> map, boolean isReplace) {
+        putMapObject(LOCAL_CONFIG_FILE, map, isReplace);
         return this;
     }
 
@@ -241,8 +242,8 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
     }
 
     @Override
-    public GlobalConfig putMapCloud(Map<String, Object> map) {
-        putMapObject(CLOUD_CONFIG_FILE, map);
+    public GlobalConfig putMapCloud(Map<String, Object> map, boolean isReplace) {
+        putMapObject(CLOUD_CONFIG_FILE, map, isReplace);
         return this;
     }
 
@@ -277,8 +278,8 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
     }
 
     @Override
-    public GlobalConfig putMap(String filename, Map<String, Object> map) {
-        putMapObject(filename, map);
+    public GlobalConfig putMap(String filename, Map<String, Object> map, boolean isReplace) {
+        putMapObject(filename, map, isReplace);
         return this;
     }
 
@@ -417,17 +418,33 @@ public class GlobalConfig extends Locker implements IGlobalConfig {
         allConfigsMap.put(key, value);
     }
 
-    private void putMapObject(String filename, Map<String, Object> map) {
+    private void putMapObject(String filename, Map<String, Object> map, boolean isReplace) {
         checkIsInit();
         if (!configParamMap.containsKey(filename)) {
             throw new RuntimeException(String.format("非法文件:%s，该文件不包含在初始化参数的文件名列表中", filename));
         }
+        Map<String, Object> configMap = fileConfigsMap.computeIfAbsent(filename, s -> new HashMap<>());
         if (map == null || map.isEmpty()) {
-            return;
+            if (isReplace) {
+                // 替换配置，就将所有配置信息清空，并重新组合各个文件的配置
+                configMap.clear();
+                allConfigsMap.clear();
+                fileConfigsMap.values().forEach(allConfigsMap::putAll);
+            } else {
+                return;
+            }
+        } else {
+            if (isReplace) {
+                // 替换配置，就将所有配置信息清空，并重新组合各个文件的配置
+                configMap.clear();
+                configMap.putAll(map);
+                allConfigsMap.clear();
+                fileConfigsMap.values().forEach(allConfigsMap::putAll);
+            } else {
+                configMap.putAll(map);
+                allConfigsMap.putAll(map);
+            }
         }
-        fileConfigsMap.computeIfAbsent(filename, s -> new HashMap<>())
-                .putAll(map);
-        allConfigsMap.putAll(map);
     }
 
     private void save(String filename, Map<String, Object> map) {

@@ -52,5 +52,13 @@
         android:textAllCaps="false"
         android:textSize="40sp" />
 
+    <Button
+        android:id="@+id/btn_write_map_and_replace"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="保存map并替换"
+        android:textAllCaps="false"
+        android:textSize="40sp" />
+
 
 </LinearLayout>

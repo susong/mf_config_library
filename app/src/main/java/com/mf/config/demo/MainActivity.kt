@@ -171,7 +171,24 @@ class MainActivity : AppCompatActivity() {
                     }
                 """.trimIndent();
                 val jsonObject = JSON.parseObject(json)
-                GlobalConfig.getInstance().putMap(jsonObject)
+                GlobalConfig.getInstance().putMap(jsonObject, false)
+                GlobalConfig.getInstance().save()
+            } catch (e: Exception) {
+                Log.e(TAG, "保存配置失败", e);
+            }
+        }
+        findViewById<Button>(R.id.btn_write_map_and_replace).setOnClickListener {
+            try {
+                val json = """
+                    {
+                        "garageId": 5678,
+                        "deviceId": 1357,
+                        "gateName": "1库门",
+                        "aaaa":"bbbb"
+                    }
+                """.trimIndent();
+                val jsonObject = JSON.parseObject(json)
+                GlobalConfig.getInstance().putMap(jsonObject, true)
                 GlobalConfig.getInstance().save()
             } catch (e: Exception) {
                 Log.e(TAG, "保存配置失败", e);
